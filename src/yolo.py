@@ -17,7 +17,7 @@ class TrainedObjectDetector:
 		self.inputResolution = inputResolution
 
 	def predict(self, frame, minimumConfidence=0.5, minimumOverlap=0.3):
-		H, W = frame.shape[:2]
+		frameHeight, frameWidth = frame.shape[:2]
 		preprocessedFrame = cv.dnn.blobFromImage(frame, 1/255, self.inputResolution, swapRB=True, crop=False)
 		self.net.setInput(preprocessedFrame)
 
@@ -26,7 +26,7 @@ class TrainedObjectDetector:
 		end = time()
 		print(f'Forward pass of a single frame took {end-start:.3f} s')
 
-		return self._decodeOutputs(outputs, W, H, minimumConfidence, minimumOverlap)
+		return self._decodeOutputs(outputs, frameWidth, frameHeight, minimumConfidence, minimumOverlap)
 
 	def drawBoxes(self, frame, detections):
 		indices, boxes, classIDs, confidences = detections
@@ -45,7 +45,7 @@ class TrainedObjectDetector:
 		self.outputLayers = [layers[i[0]-1] for i in self.net.getUnconnectedOutLayers()]
 
 	@staticmethod
-	def _decodeOutputs(outputs, W, H, minimumConfidence, minimumOverlap):
+	def _decodeOutputs(outputs, frameWidth, frameHeight, minimumConfidence, minimumOverlap):
 		boxes, confidences, classIDs  = [], [], []
 		for output in outputs:
 			for detection in output:
@@ -55,8 +55,8 @@ class TrainedObjectDetector:
 
 				# filter out weak predictions 
 				if confidence > minimumConfidence:
-					# map box parameters from YOLO v3 representation to opencv representation
-					box = detection[0:4] * [W, H, W, H]
+					# map box parameters from YOLO representation to opencv representation
+					box = detection[0:4] * [frameWidth, frameHeight, frameWidth, frameHeight]
 					centerX, centerY, width, height = box
 					x = centerX - width/2
 					y = centerY - height/2
