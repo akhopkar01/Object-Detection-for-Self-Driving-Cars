@@ -69,3 +69,12 @@ class TrainedObjectDetector:
 		indices = cv.dnn.NMSBoxes(boxes, confidences, minimumConfidence, minimumOverlap)
 
 		return (indices, boxes, classIDs, confidences)
+
+	def logResults(self, frameName, detections):
+		indices, boxes, classIDs, confidences = detections
+		with open(f'../output/{frameName}.txt', 'w') as file:
+			if len(indices) > 0:
+				for i in indices.flatten():
+					x, y, w, h = boxes[i]
+					left, top, right, bottom = x, y, x+w, y+h
+					file.write(f"{self.labels[classIDs[i]].replace(' ','')} {confidences[i]} {left} {top} {right} {bottom}\n")

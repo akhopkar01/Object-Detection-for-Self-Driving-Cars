@@ -1,23 +1,27 @@
 import cv2 as cv
 import yolo
 
-data = 'testVideo.mp4'
+video = 'testVideo.mp4'
 
 def main():
-	inputVideo = cv.VideoCapture(f'../data/{data}')
-	outputVideo = cv.VideoWriter(f'../output/{data}', cv.VideoWriter_fourcc(*'XVID'), 30, (int(inputVideo.get(3)),int(inputVideo.get(4))))
+	# data
+	inputVideo = cv.VideoCapture(f'../data/video/{video}')
+	outputVideo = cv.VideoWriter(f'../output/{video}', cv.VideoWriter_fourcc(*'XVID'), 30, (int(inputVideo.get(3)),int(inputVideo.get(4))))
 	
-	# YOLO v3
+	# model
 	model = '../YOLO_COCO/'
 	inputResolution = (416,416)
 	detector = yolo.TrainedObjectDetector(model, inputResolution)
 
+	frameIndex = 0
 	while True:
+		frameIndex += 1
 		read, frame = inputVideo.read()
 		if not read:
 			break	
 		detections = detector.predict(frame)
 		detector.drawBoxes(frame, detections)
+		detector.logResults(f'{video[:-4]}_{frameIndex}', detections)
 
 		cv.namedWindow('Live', cv.WINDOW_NORMAL)
 		cv.imshow('Live', frame)
