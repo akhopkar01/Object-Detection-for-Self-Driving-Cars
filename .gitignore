@@ -1,3 +1,4 @@
-src/.vscode/
-src/__pycache__/
-YOLO_COCO/yolo*
+Inference/src/.vscode/
+Inference/src/__pycache__/
+Inference/YOLO_COCO/yolo*
+Evaluation/output/
