@@ -9,7 +9,7 @@ This project implements YOLO-based and SSD-based object detectors for self-drivi
 ## Inference
 1. Navigate to Inference directory
 2. Put the your dataset in the corresponding data folder
-3. Download the pretrained model weights and put them in COCO-YOLO/COCO-SSD
+3. Download the pretrained model weights from "https://pjreddie.com/darknet/yolo/" and put them in COCO-YOLO/COCO-SSD
 4. Navigate to src directory
 5. run ```python detect_image.py```/```python detect_video.py``` in the terminal (for detection on images/videos)
   
